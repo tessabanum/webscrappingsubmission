@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>{{title}}</title>
+
+</head>
+<body>
+   <div class="container">
+       <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-4 text-center">
+                {{title}}
+            </h1>
+            <div class="text-center">
+                <a class="btn btn-primary btn-lg" href="/scrape" role="button">Scrape New Data</a>
+            </div>
+          </div>
+       </div>
+       <div class="row">
+           <div class="col">
+               <h3>Latest Mars News</h3>
+               <h5>{{news_title}}</h5>
+               <h6>{{news_p}}</h6>
+           </div>
+       </div>
+       <div class="row">
+           <div class="col">
+               <h3>Featured Mars Images</h3>
+               <img src="{{featured_image}}" height="400" width="400" alt="Full Image"/>
+           </div>
+           <div class="col">
+               <div class="row">
+                   <div class="card" style="width: 28rem;">
+                      <div class="card-body">
+                        <h5 class="card-title">Current Weather on Mars</h5>
+                        <p class="card-text">{{mars_weather}}</p>
+                      </div>
+                   </div>
+               </div>
+               <div class="row">
+                   <h4>Mars Facts</h4>
+                   {{df_mars_fact|safe}}
+               </div>
+           </div>
+       </div>
+       {%for item in hemisphere_image %}
+           {% if loop.index < 3 %}
+               <div class="row">
+                   {% if loop.index == 1 %}
+                       <div class="col">
+                           <img src="{{item.img_url}}" alt="{{item.title}}"/>
+                           <h6>{{item.title}}</h6>
+                       </div>
+                   {% else %}
+                       <div class="col">
+                           <img src="{{item.img_url}}" alt="{{item.title}}"/>
+                           <h6>{{item.title}}</h6>
+                       </div>
+                   {% endif %}
+               </div>
+           {% elif loop.index > 2 and loop.index < 5 %}
+               <div class="row">
+                   {% if loop.index == 3 %}
+                       <div class="col">
+                           <img src="{{item.img_url}}" alt="{{item.title}}"/>
+                           <h6>{{item.title}}</h6>
+                       </div>
+                   {% else %}
+                       <div class="col">
+                           <img src="{{item.img_url}}" alt="{{item.title}}"/>
+                           <h6>{{item.title}}</h6>
+                       </div>
+                   {% endif %}
+               </div>
+           {% endif %}
+       {%endfor%}
+
+   </div>
+
+</body>
+</html>

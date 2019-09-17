@@ -19,7 +19,7 @@ def init_browser(headless=False, exec_path="/usr/local/bin/chromedriver"):
     return Browser("chrome", **executable_path)
 
 def scrape():
-    browser = init_browser()
+    browser = init_browser(headless=True)
     mars_data_dict = {}
     
     ### Nasa Mars News
@@ -31,10 +31,10 @@ def scrape():
     soup = BeautifulSoup(html, 'html.parser')
     
     #find recent news article, date and title
-    article = soup.find("div", class_="list_text")
-    news_title = article.find("div", class_="content_title").text
-    news_p = article.find("div", class_="article_teaser_body").text
-    news_date = article.find("div", class_="list_date").text
+    article = soup.find("div", class_="list_text").text
+    news_title = soup.find("div", class_="content_title").text
+    news_p = soup.find("div", class_="article_teaser_body").text
+    news_date = soup.find("div", class_="list_date").text
     
     mars_data_dict['article'] = article
     mars_data_dict['news_title'] = news_title
@@ -63,7 +63,7 @@ def scrape():
     soup = BeautifulSoup(html, 'html.parser')
 
     full_img_path = soup.select("#page > section.content_page.module > div > article > figure > a > img")[0]['src']
-    mars_data_dict['featured_image'] = full_img_path
+    mars_data_dict['featured_image'] = "https://jpl.nasa.gov" + full_img_path
     
     
     ### Mars Weather ###
@@ -101,9 +101,7 @@ def scrape():
     df_mars_fact = pd.DataFrame(df_mars_fact[0])
 
     #convert dataframe to html
-    df_mars_fact_tb = df_mars_fact.to_html()
-
-    mars_data_dict['df_mars_fact'] = df_mars_fact_tb
+    mars_data_dict['df_mars_fact'] = df_mars_fact.to_html()
 
 
     ### Mars Hemispheres ###

@@ -1,6 +1,6 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, jsonify
 from flask_pymongo import PyMongo
-import scrape_mars
+from scrape_mars import scrape as scrape_data
 
 app = Flask(__name__)
 
@@ -10,22 +10,17 @@ mongo = PyMongo(app, uri="mongodb://localhost:27017/scrape")
 
 @app.route('/')
 def index():
-    return """
-    <html>
-        <head></head>
-        <body>
-            <h1>We are getting close !!!</h1>
-        </body>
-    </html>
-    """
+    data =  mongo.db.mars.find_one()
+    data['title'] = 'Mission to Mars'
+    return render_template('index.html', **data)
 
 
 @app.route('/scrape')
 def scrape():
 
-    data = scrape_mars.scrape()
+    data = scrape_data()
 
     # Update the Mongo database using update and upsert=True
-    mongo.db.collection['mars'].update({}, data, upsert=True)
+    mongo.db.mars.insert_one(data)
 
-    return data
+    return render_template('index.html', **{"title": "Mission to Mars"})
