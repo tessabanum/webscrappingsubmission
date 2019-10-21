@@ -10,7 +10,11 @@ mongo = PyMongo(app, uri="mongodb://localhost:27017/scrape")
 
 @app.route('/')
 def index():
+    # data =  mongo.db.mars.find().sort({'_id': -1}).limit(1)
     data =  mongo.db.mars.find_one()
+
+    print(data)
+    
     data['title'] = 'Mission to Mars'
     return render_template('index.html', **data)
 

@@ -107,36 +107,26 @@ def scrape():
     ### Mars Hemispheres ###
     
     #visit URL 
-    mars_hemispheres_url = "https://astrogeology.usgs.gov/search/results? q=hemisphere+enhanced&k1=target&v1=Mars"
+    mars_hemispheres_url = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
     browser.visit(mars_hemispheres_url)
 
     #scrape the latest Mars weather tweet from the page 
     html = browser.html
     soup = BeautifulSoup(html,'html.parser')
 
+    full_image_url = []
     hemisperes_title = []
+
+    image_domain = "https://astrogeology.usgs.gov"
 
     for img_title in soup.find_all('div',class_="description"):
         hemisperes_title.append(img_title.find('h3').text)
 
-    #find image 
-    url = "https://astrogeology.usgs.gov"
-    hemisphere_image_url = []
+    item_divs = soup.select("#product-section > div.collapsible.results div.item > a > img")
 
-    for image in soup.find_all('div',class_="item"):
+    for item in item_divs:
+        full_image_url.append(image_domain + item.get('src'))
 
-        hemisphere_image_url.append(url + image.find('img').get('src'))
-    
-    #get image url
-    full_image_url = []
-
-    for each_url in hemisphere_image_url:
-    
-        split_url = each_url.split(".tif_thumb.png")[0]
-    
-        image_url = split_url + ".tif/full.jpg"
-    
-        full_image_url.append(image_url)
         
     hemisphere_image_url = [{"title": hemisperes_title[i], "img_url": full_image_url[i]} for i in range(len(hemisperes_title))]
 
